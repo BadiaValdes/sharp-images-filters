@@ -1,0 +1,29 @@
+{
+  "name": "sharp-image-filter",
+  "version": "0.0.1",
+  "description": "I was working with sharp on a project. After that, I related that I don't want to do the same code again, so I came up with the idea of creating an npm package that handles the sharp's librery. With just a few parameters, you can include some of the image processing tools that that library offers.  ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/BadiaValdes/sharp-image-filter.git"
+  },
+  "keywords": [
+    "sharp",
+    "image",
+    "filter",
+    "express"
+  ],
+  "author": "BadiaValdes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BadiaValdes/sharp-image-filter/issues"
+  },
+  "homepage": "https://github.com/BadiaValdes/sharp-image-filter#readme",
+  "dependencies": {
+    "sharp": "^0.29.1"
+  }
+}
