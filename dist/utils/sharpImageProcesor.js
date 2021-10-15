@@ -18,6 +18,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sharpImageProcess = exports.createSharpFilter = exports.setSharpImageOperation = exports.setSharpChannelOptions = exports.setSharpColorOptions = exports.readFilePassedBy = void 0;
 const fileS = __importStar(require("fs"));
@@ -195,33 +204,35 @@ function createSharpFilter(options, optionsImageOperations, optionsChannelOperat
     }
 }
 exports.createSharpFilter = createSharpFilter;
-async function sharpImageProcess(imagePath, name, res, options, optionsImageOperations, optionsColorOperations, optionsChannelOperations) {
-    try {
-        const fileType = options
-            ? options.outPutFormat
-            : defaultValues_1.defaultSharpOptions.outPutFormat;
-        const fileImage = readFilePassedBy(imagePath);
-        fileImage.on('error', (e) => {
-            if (e) {
-                console.log('File not found');
-                res.writeHeader(404, 'File not found');
-                res.end('File not found');
-            }
-            else {
-            }
-        });
-        fileImage.on('open', (_) => {
-            res.set({
-                'Content-Type': `image/${fileType}`,
-                'Content-Disposition': `filename=${name}`,
+function sharpImageProcess(imagePath, name, res, options, optionsImageOperations, optionsColorOperations, optionsChannelOperations) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const fileType = options
+                ? options.outPutFormat
+                : defaultValues_1.defaultSharpOptions.outPutFormat;
+            const fileImage = readFilePassedBy(imagePath);
+            fileImage.on('error', (e) => {
+                if (e) {
+                    console.log('File not found');
+                    res.writeHeader(404, 'File not found');
+                    res.end('File not found');
+                }
+                else {
+                }
             });
-        });
-        const sharpFilter = createSharpFilter(options ? options : undefined, optionsImageOperations ? optionsImageOperations : undefined, optionsChannelOperations ? optionsChannelOperations : undefined, optionsColorOperations ? optionsColorOperations : undefined);
-        fileImage.pipe(sharpFilter).pipe(res);
-    }
-    catch (e) {
-        console.error(e);
-    }
+            fileImage.on('open', (_) => {
+                res.set({
+                    'Content-Type': `image/${fileType}`,
+                    'Content-Disposition': `filename=${name}`,
+                });
+            });
+            const sharpFilter = createSharpFilter(options ? options : undefined, optionsImageOperations ? optionsImageOperations : undefined, optionsChannelOperations ? optionsChannelOperations : undefined, optionsColorOperations ? optionsColorOperations : undefined);
+            fileImage.pipe(sharpFilter).pipe(res);
+        }
+        catch (e) {
+            console.error(e);
+        }
+    });
 }
 exports.sharpImageProcess = sharpImageProcess;
 //# sourceMappingURL=sharpImageProcesor.js.map
