@@ -32,10 +32,19 @@ exports.sharpImageProcess = exports.createSharpFilter = exports.setSharpImageOpe
 const fileS = __importStar(require("fs"));
 const sharp = __importStar(require("sharp"));
 const defaultValues_1 = require("./defaultValues");
+/** Read the file, nothing more and nothing less. And returns it, of course */
 function readFilePassedBy(imagePath) {
     return fileS.createReadStream(imagePath);
 }
 exports.readFilePassedBy = readFilePassedBy;
+/**
+ * @param sharp
+ * @param colorOptions
+ *
+ * This method handles everything about the image color options
+ *
+ * Returns the sharp object with the color filters you choose to apply.
+ */
 function setSharpColorOptions(sharp, colorOptions) {
     if (colorOptions.tint != undefined) {
         if ((colorOptions.tint.r && colorOptions.tint.g && colorOptions.tint.b) >=
@@ -63,6 +72,15 @@ function setSharpColorOptions(sharp, colorOptions) {
     return sharp;
 }
 exports.setSharpColorOptions = setSharpColorOptions;
+/**
+ *
+ * @param sharp
+ * @param channelsOptions
+ *
+ * This method handles everything about the image channel options
+ *
+ * Returns the sharp object with the channel filters you choose to apply.
+ */
 function setSharpChannelOptions(sharp, channelsOptions) {
     if (channelsOptions.removeAlpha != undefined) {
         sharp.removeAlpha(true);
@@ -73,9 +91,33 @@ function setSharpChannelOptions(sharp, channelsOptions) {
     if (channelsOptions.extractChannel != undefined) {
         sharp.extractChannel(channelsOptions.extractChannel);
     }
+    //   if (channelsOptions.bandbool != undefined) {
+    //     sharp.bandbool(sharp.bool.and)
+    //     // switch (channelsOptions.bandbool) {
+    //     //   case 'and':
+    //     //     sharp.bandbool(sharp.bool.and)
+    //     //     break;
+    //     //   case 'or':
+    //     //     sharp.bandbool(sharp.bool.or)
+    //     //     break;
+    //     //   case 'eor':
+    //     //     sharp.bandbool(sharp.bool.eor)
+    //     //     break;
+    //     //   default:
+    //     //     break;
+    //     // }
+    //   }
     return sharp;
 }
 exports.setSharpChannelOptions = setSharpChannelOptions;
+/**
+ * @param sharp
+ * @param options
+ *
+ * This method handles everything about the image filter options
+ *
+ * Returns the sharp object with the filters you choose to apply.
+ */
 function setSharpImageOperation(sharp, options) {
     if (options.blur != undefined) {
         if (options.blur >= 0.3 && options.blur < 1000)
@@ -156,6 +198,13 @@ function setSharpImageOperation(sharp, options) {
     return sharp;
 }
 exports.setSharpImageOperation = setSharpImageOperation;
+/**
+ * @param options.
+ * @param optionsImageOperations.
+ * @param optionsChannelOperations.
+ * @param optionsColorOperations.
+ * Gets all the filters and puts them together.
+ */
 function createSharpFilter(options, optionsImageOperations, optionsChannelOperations, optionsColorOperations) {
     try {
         let width = null;
@@ -204,6 +253,31 @@ function createSharpFilter(options, optionsImageOperations, optionsChannelOperat
     }
 }
 exports.createSharpFilter = createSharpFilter;
+/**
+ *
+ * @param imagePath
+ * @param name
+ * @param res
+ * @param options
+ * @param optionsImageOperations
+ * @param optionsColorOperations
+ * @param optionsChannelOperations
+ *-*-
+ *
+ * Main function of the package. Here you need to specify the image path, the final name and the response (you need to pass the response variable of your own method - Ex: express -> res)
+ *
+ * Those were the mandatory parameters. Now, you can specify the optional parameters:
+ *
+ * options -> Image output options such as format or quality, by default, the format is 'webp' and the quality is 80.
+ *
+ * optionsImageOperations -> The filters that will be used on the image as blur; by default it is not defined
+ *
+ * optionsColorOperations -> The image color manipulation filter as the color mode; by defalut is not defined
+ *
+ * optionsChannelOperations-> Image channel manipulation operations such as extract mode; by defalut is not defined
+ *
+ * This method does not return a value, it will send the final image via http
+ */
 function sharpImageProcess(imagePath, name, res, options, optionsImageOperations, optionsColorOperations, optionsChannelOperations) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -227,6 +301,7 @@ function sharpImageProcess(imagePath, name, res, options, optionsImageOperations
                 });
             });
             const sharpFilter = createSharpFilter(options ? options : undefined, optionsImageOperations ? optionsImageOperations : undefined, optionsChannelOperations ? optionsChannelOperations : undefined, optionsColorOperations ? optionsColorOperations : undefined);
+            //return new StreamableFile(fileImage.pipe(sharpFilter).pipe(res))
             fileImage.pipe(sharpFilter).pipe(res);
         }
         catch (e) {

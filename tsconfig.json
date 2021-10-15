@@ -8,8 +8,8 @@
       "outDir": "dist",
       "target": "es2015",
       "declaration": true,
-      "removeComments": true,
+      "removeComments": false,
       "sourceMap": true
     },
-    "lib": ["esc5"]
+    "lib": ["es5"]
   }
