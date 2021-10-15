@@ -25,5 +25,8 @@
   "homepage": "https://github.com/BadiaValdes/sharp-image-filter#readme",
   "dependencies": {
     "sharp": "^0.29.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.0"
   }
 }
